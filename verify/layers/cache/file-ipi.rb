@@ -72,12 +72,12 @@ describe "Waves::Cache::File" do
     threads=[]
     90.times do |x| 
       threads << Thread.new do
-        Thread.stop; sleep rand / 100
+        Thread.stop; sleep rand /  60
         @cache[:a] = @cache[:a] + 1 
       end
     end
     threads.each {|thread| thread.run; thread.join }
     @cache[:a].should == 90
   end
-  
+
 end
