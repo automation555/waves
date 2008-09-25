@@ -67,10 +67,13 @@ describe "Waves::Cache::File" do
 
   it "can synchronize" do
     @cache[:a] = 0
-    threads=[]; 5.times do |x| threads << Thread.new do
-      Thread.stop
-      @cache[:a] = x 
-    end; end
+    threads=[]
+    90.times do |x| 
+      threads << Thread.new do
+        Thread.stop; sleep rand /  60
+        @cache[:a] = @cache[:a] + 1 
+      end
+    end
     threads.each {|thread| thread.run; thread.join }
     @cache[:a].should == 5
   end

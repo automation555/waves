@@ -2,7 +2,10 @@ module Waves
   module Cache
 
     class Memcached < Waves::Cache::IPI
-      require 'memcached'
+      require 'memcached' and Waves.config.dependencies << 'memcached'
+     #  Only un-comment if you understand the implications.
+#       require 'memcached-ext'
+#	include Waves::Cache::Memcached::Extensions
 
       def initialize(args)
         # initialize takes what you would throw at Memcached.new
