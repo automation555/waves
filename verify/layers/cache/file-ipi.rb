@@ -70,14 +70,14 @@ describe "Waves::Cache::File" do
   it "can synchronize" do
     @cache[:a] = 0
     threads=[]
-    90.times do |x| 
+    13.times do |x| 
       threads << Thread.new do
-        Thread.stop; sleep rand /  60
+        Thread.stop; sleep rand / 7 
         @cache[:a] = @cache[:a] + 1 
       end
     end
     threads.each {|thread| thread.run; thread.join }
-    @cache[:a].should == 90
+    @cache[:a].should == 13
   end
 
 end

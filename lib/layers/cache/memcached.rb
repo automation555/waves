@@ -14,9 +14,11 @@ module Waves
         
         def self.included(app)
           require 'layers/cache/memcached/memcached-ipi'
-          
+          include Waves::Cache::Memcached          
+
           if Waves.cache.nil?
-            Waves.cache = Waves::Cache::Memcached.new( Waves.config.cache )
+            Waves.cache = Waves::Cache::Memcached
+            Waves.cache.new( Waves.config.cache )
           end
           
         end
