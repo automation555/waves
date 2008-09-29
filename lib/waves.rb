@@ -18,16 +18,11 @@ require 'date'
 require 'benchmark'
 require 'base64'
 
-require 'autocode'
 gem 'dyoder-functor', '>= 0.5.0'
 require 'functor'
 gem 'dyoder-filebase', '>= 0.3.4'
 require 'filebase'
 require 'filebase/model'
-
-# TODO: we should not be including this just for mime-types
-# should get dynamically required when we know that is the handler
-require 'mongrel'
 
 # selected project-specific extensions
 require 'ext/module'
@@ -69,37 +64,6 @@ require 'matchers/resource'
 require 'resources/paths'
 require 'resources/mixin'
 
-
-# TODO: if these are truly layers, they should not be included here
-# this includes the MVC support, the helpers, and the renderers
-# ... the inflector stuff should probably be in core, since the resources
-# actually depends on it ... otherwise the singular / plural stuff
-# should be removed and made a part of the inflector layer
-
-# waves foundations / layers
-# waves mvc support
-require 'controllers/mixin'
 require 'views/mixin'
 require 'views/errors'
-require 'helpers/common'
-require 'helpers/form'
-require 'helpers/formatting'
-require 'helpers/model'
-require 'helpers/view'
-require 'helpers/built_in'
-
-
 require 'renderers/mixin'
-
-require 'foundations/default'
-require 'foundations/simple'
-
-require 'layers/simple'
-require 'layers/simple_errors'
-require 'layers/mvc'
-require 'layers/default_errors'
-require 'layers/inflect/english'
-require 'layers/renderers/markaby'
-require 'layers/renderers/erubis'
-require 'layers/renderers/haml'
-

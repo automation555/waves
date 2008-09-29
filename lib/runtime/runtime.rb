@@ -7,10 +7,8 @@ module Waves
     def []( name ) ; self.find { |app| app.name == name.to_s.camel_case } ; end
   end
   
-  def self.config; Waves.main::Configurations[ mode ]; end
+  def self.config; instance.config ; end
   
-  def self.mode; ENV['mode'] || :development ; end
-
   # The list of all loaded applications
   def self.applications ; @applications ||= Applications.new ; end
 
@@ -30,8 +28,7 @@ module Waves
   
   def self.version ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/VERSION" ) ) ; end
   def self.license ; File.read( File.expand_path( "#{File.dirname(__FILE__)}/../../doc/LICENSE" ) ) ; end
-  def self.synchronize( &block ) ; ( @mutex ||= Mutex.new ).synchronize( &block ) ; end
-
+  
   def self.method_missing(name,*args,&block) ; instance.send(name,*args,&block) ; end
 
   # A Waves::Runtime takes an inert application module and gives it concrete, pokeable form.
@@ -43,27 +40,22 @@ module Waves
     # Accessor for options passed to the runtime.
     attr_reader :options
 
-    # Accessor to set and return an application's cache object.
-    attr_accessor :cache
-
     # Create a new Waves application instance.
     def initialize( options={} )
       @options = options
       Dir.chdir options[:directory] if options[:directory]
-      Runtime.instance = self
       Kernel.load( options[:startup] || 'startup.rb' )
+      Runtime.instance = self
     end
 
-    def synchronize( &block ) ; Waves.synchronize( &block ) ; end
-
     # The 'mode' of the runtime determines which configuration it will run under.
-    def mode ; Waves.mode ; end
+    def mode ; options[:mode]||:development ; end
     
     # Returns true if debug was set to true in the current configuration.
     def debug? ; config.debug ; end
 
     # Returns the current configuration.
-    def config ; Waves.config ; end
+    def config ; Waves.main::Configurations[ mode ] ; end
 
     # Reload the modules specified in the current configuration.
     def reload ; config.reloadable.each { |mod| mod.reload } ; end
