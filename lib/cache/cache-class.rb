@@ -1,21 +1,10 @@
-###################################
-# a Waves Cache brought to you by ab5tract
-# :This is the Cache iPi. "Do as you will, return what verify expects."
-# :(In this case it's just a hash, but in the end who knows? Follow the iPi trail and see where it goes)
-###################################
+# Waves::Caches::Hash - not an abstract class, an ab5tract class
 
 module Waves
 
-  module Cache
-    # Exception classes
-    class KeyMissing < StandardError; end
-    class KeyExpired < StandardError; end
-
-    def self.new
-      Waves::Cache::IPI.new
-    end
+  module Caches
     
-    class IPI
+    class Hash
 
       def initialize
         @cache = {}  
@@ -31,14 +20,12 @@ module Waves
       end
 
       def exists?(key)
-        true if fetch(key)
-      rescue KeyMissing, KeyExpired
-        false
+        fetch(key) == nil ? true : false
       end
 
       alias :exist? :exists?
 
-      # Replicate the same capabilities in any descendent of Waves::Cache for API compatibility.
+      # Replicate the same capabilities in any mixin for Waves::Caches on grounds of API compatibility.
 
       def store(key, value, ttl = nil)
         item = { :value => value }
@@ -49,7 +36,7 @@ module Waves
       end
 
       def delete(*keys)
-       Waves.synchronize { keys.each { |key| raise KeyMissing unless (@cache.has_key?(key) and @cache.delete(key)) }}
+       Waves.synchronize { keys.each { |key| return nil unless (@cache.has_key?(key) and @cache.delete(key)) }}
       end
 
       def clear
@@ -58,9 +45,9 @@ module Waves
 
       def fetch(key)    # :TODO: Should probably take a splat
         Waves.synchronize do
-          raise KeyMissing unless item = @cache[ key ]
+          return nil unless item = @cache[ key ]
           if item[:expires] and item[:expires] < Time.now
-            @cache.delete( key ) and raise KeyExpired 
+            @cache.delete( key )
           end
           item[:value]
         end

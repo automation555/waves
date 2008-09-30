@@ -1,10 +1,9 @@
 #--
-# Waves::Layers::Cache::MemcachedCache
+# Waves::Layers::Cache::Memcached
 # File: lib/layers/cache/memcached.rb
 #++
 # Framework layer to access your memcached server(s). The specific gem we use is 'memcached'.
-# We basically stay out of the way, so check 'http://blog.evanweaver.com/files/doc/fauna/memcached/classes/Memcached.html'
-# for precise uses.
+# If you want to forward missing methods to the memcached object include Waves::Layers::Cache::Memcached::Ext .
 
 module Waves
   module Layers
@@ -13,7 +12,7 @@ module Waves
       module Memcached
         
         def self.included(app)
-          require 'layers/cache/memcached/memcached-ipi'
+          require 'layers/cache/memcached/memcached-module'
           include Waves::Cache::Memcached          
 
           if Waves.cache.nil?

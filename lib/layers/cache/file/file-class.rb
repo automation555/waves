@@ -1,7 +1,7 @@
 module Waves
-  module Cache
+  module Caches
 
-    class File < Waves::Cache::IPI
+    class File < Waves::Caches::Hash
 
       def initialize(arg)
         raise ArgumentError, ":dir needs to not be nil" if arg[:dir].nil?
@@ -15,13 +15,10 @@ module Waves
         item[:expires] = Time.now + ttl   if ttl
 
         Waves.synchronize do
-
           @keys << key
-
           file = ::File.new(key_file,'w')
           Marshal.dump(item, file)
           file.close
-
         end
       end
 
@@ -30,7 +27,7 @@ module Waves
           keys.each do |key|
             if @keys.include? key
               ::File.delete(@directory / key)
-              @keys.delete key
+              @keys.delete key; nil														# return nil
             end
           end
         end
@@ -38,10 +35,8 @@ module Waves
 
       def clear
         Waves.synchronize do
-
           @keys.each {|key| ::File.delete(@directory / key) }
           @keys.clear
-
         end
       end
 
@@ -52,12 +47,10 @@ module Waves
 
           if item[:expires] and item[:expires] < Time.now
             ::File.delete(@directory / key)
-            @keys.delete key and raise KeyExpired
+            @keys.delete key
           end
           item[:value]
         end
-      rescue Errno::ENOENT
-        raise KeyMissing
       end
 
     end
