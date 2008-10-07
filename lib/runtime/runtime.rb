@@ -39,6 +39,9 @@ module Waves
 
     # Accessor for options passed to the runtime.
     attr_reader :options
+    
+    # Waves.cache is set by Cache Layers
+    attr_accessor :cache
 
     # Create a new Waves application instance.
     def initialize( options={} )

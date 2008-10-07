@@ -8,7 +8,7 @@ module Waves
           require 'layers/cache/file/file-class'
 
           if Waves.cache.nil?
-            Waves.cache = Waves::Cache::File.new( Waves.config.cache )
+            Waves.cache = Waves::Caches::File.new( Waves.config.cache )
           end
           
         end
